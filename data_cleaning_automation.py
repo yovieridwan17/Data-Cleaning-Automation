@@ -153,11 +153,14 @@ def normalisasi_teks(df):
 # Step 4: Simpan Data
 def simpan_data(df, file_path):
     ext = os.path.splitext(file_path)[1].lower()
-    out_path = input('Masukkan nama file output (misal: data_bersih.csv): ')
-    if ext == '.csv':
+    out_path = input('Masukkan nama file output lengkap beserta ekstensi (misal: hasil_cleaning.csv atau hasil.xlsx): ')
+    if out_path.endswith('.csv'):
         df.to_csv(out_path, index=False)
-    elif ext in ['.xls', '.xlsx']:
+    elif out_path.endswith('.xls') or out_path.endswith('.xlsx'):
         df.to_excel(out_path, index=False)
+    else:
+        print('Ekstensi file output tidak didukung. Data tidak disimpan.')
+        return
     print(f'Data bersih telah disimpan ke {out_path}')
 
 # Menu utama cleaning

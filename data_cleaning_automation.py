@@ -1,10 +1,31 @@
 import pandas as pd
 import os
+import colorama
+from colorama import Fore, Style
+colorama.init(autoreset=True)
+
+def print_header(text):
+    print(Fore.CYAN + Style.BRIGHT + '\n' + '='*50)
+    print(Fore.CYAN + Style.BRIGHT + f'{text.center(50)}')
+    print(Fore.CYAN + Style.BRIGHT + '='*50 + '\n')
+
+def print_menu():
+    print(Fore.GREEN + Style.BRIGHT + '\n┌' + '─'*36 + '┐')
+    print(Fore.GREEN + Style.BRIGHT + '│{:^36s}│'.format('MENU DATA CLEANING'))
+    print(Fore.GREEN + Style.BRIGHT + '├' + '─'*36 + '┤')
+    print(Fore.YELLOW + Style.BRIGHT + '│ 1. Cek & perbaiki typo         │')
+    print(Fore.YELLOW + Style.BRIGHT + '│ 2. Hapus/isi data kosong        │')
+    print(Fore.YELLOW + Style.BRIGHT + '│ 3. Hapus duplikat               │')
+    print(Fore.YELLOW + Style.BRIGHT + '│ 4. Ubah tipe data kolom         │')
+    print(Fore.YELLOW + Style.BRIGHT + '│ 5. Normalisasi teks             │')
+    print(Fore.YELLOW + Style.BRIGHT + '│ 0. Selesai & simpan             │')
+    print(Fore.GREEN + Style.BRIGHT + '└' + '─'*36 + '┘')
 
 # Step 1: Import Data
 def import_data():
+    print_header('IMPORT DATA')
     print('Pilih file data yang ingin di-cleaning:')
-    file_path = input('Masukkan path file (misal: data.csv): ')
+    file_path = input(Fore.YELLOW + 'Masukkan path file (misal: data.csv): ')
     if not os.path.exists(file_path):
         print('File tidak ditemukan!')
         return None
@@ -21,6 +42,7 @@ def import_data():
 
 # Step 2: Pilih Kolom
 def pilih_kolom(df):
+    print_header('PILIH KOLOM')
     print('Kolom yang tersedia:')
     for i, col in enumerate(df.columns):
         print(f'{i+1}. {col}')
@@ -32,6 +54,7 @@ def pilih_kolom(df):
 
 # Step 3: Cek Typo dan Perbaiki
 def perbaiki_typo(df, kolom):
+    print_header(f'CEK & PERBAIKI TYPO ({kolom})')
     unique_vals = df[kolom].astype(str).unique()
     print(f'Nilai unik pada kolom {kolom}:')
     for i, val in enumerate(unique_vals):
@@ -49,6 +72,7 @@ def perbaiki_typo(df, kolom):
     return df
 
 def hapus_missing(df):
+    print_header('HAPUS/ISI DATA KOSONG')
     print('1. Hapus baris dengan data kosong')
     print('2. Isi data kosong dengan nilai tertentu')
     print('3. Forward fill (isi dengan nilai sebelumnya)')
@@ -104,6 +128,7 @@ def hapus_missing(df):
     return df
 
 def hapus_duplikat(df):
+    print_header('HAPUS DUPLIKAT')
     print('Kolom yang tersedia:')
     for i, col in enumerate(df.columns):
         print(f'{i+1}. {col}')
@@ -122,6 +147,7 @@ def hapus_duplikat(df):
     return df
 
 def ubah_tipe_data(df):
+    print_header('UBAH TIPE DATA KOLOM')
     kolom = pilih_kolom(df)
     if kolom:
         print('Tipe data saat ini:', df[kolom].dtype)
@@ -148,6 +174,7 @@ def ubah_tipe_data(df):
     return df
 
 def normalisasi_teks(df):
+    print_header('NORMALISASI TEKS')
     kolom = pilih_kolom(df)
     if kolom:
         print('1. Ubah ke lowercase')
@@ -168,28 +195,33 @@ def normalisasi_teks(df):
 
 # Step 4: Simpan Data
 def simpan_data(df, file_path):
-    ext = os.path.splitext(file_path)[1].lower()
-    out_path = input('Masukkan nama file output lengkap beserta ekstensi (misal: hasil_cleaning.csv atau hasil.xlsx): ')
+    import tkinter as tk
+    from tkinter import filedialog, messagebox
+    root = tk.Tk()
+    root.withdraw()
+    print_header('SIMPAN DATA HASIL CLEANING')
+    print(Fore.YELLOW + 'Pilih lokasi dan nama file output (csv/xls/xlsx) melalui dialog file explorer...')
+    out_path = filedialog.asksaveasfilename(
+        defaultextension='.csv',
+        filetypes=[('CSV files', '*.csv'), ('Excel files', '*.xls;*.xlsx'), ('All files', '*.*')],
+        title='Simpan hasil data cleaning')
+    if not out_path:
+        print(Fore.RED + 'Penyimpanan dibatalkan.')
+        return
     if out_path.endswith('.csv'):
         df.to_csv(out_path, index=False)
     elif out_path.endswith('.xls') or out_path.endswith('.xlsx'):
         df.to_excel(out_path, index=False)
     else:
-        print('Ekstensi file output tidak didukung. Data tidak disimpan.')
+        print(Fore.RED + 'Ekstensi file output tidak didukung. Data tidak disimpan.')
         return
-    print(f'Data bersih telah disimpan ke {out_path}')
+    print(Fore.GREEN + f'Data bersih telah disimpan ke {out_path}')
 
 # Menu utama cleaning
 def menu_cleaning(df):
     while True:
-        print('\n=== MENU DATA CLEANING ===')
-        print('1. Cek & perbaiki typo')
-        print('2. Hapus/isi data kosong')
-        print('3. Hapus duplikat')
-        print('4. Ubah tipe data kolom')
-        print('5. Normalisasi teks')
-        print('0. Selesai & simpan')
-        pilihan = input('Pilih aksi: ')
+        print_menu()
+        pilihan = input(Fore.CYAN + Style.BRIGHT + 'Pilih aksi: ')
         if pilihan == '1':
             kolom = pilih_kolom(df)
             if kolom:
@@ -205,7 +237,7 @@ def menu_cleaning(df):
         elif pilihan == '0':
             break
         else:
-            print('Pilihan tidak valid!')
+            print(Fore.RED + 'Pilihan tidak valid!')
     return df
 
 if __name__ == '__main__':

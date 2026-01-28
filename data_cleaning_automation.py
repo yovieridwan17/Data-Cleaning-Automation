@@ -51,7 +51,12 @@ def perbaiki_typo(df, kolom):
 def hapus_missing(df):
     print('1. Hapus baris dengan data kosong')
     print('2. Isi data kosong dengan nilai tertentu')
-    pilihan = input('Pilih opsi (1/2, 0 untuk batal): ')
+    print('3. Forward fill (isi dengan nilai sebelumnya)')
+    print('4. Backward fill (isi dengan nilai setelahnya)')
+    print('5. Isi dengan median (kolom numerik)')
+    print('6. Isi dengan modus (mode)')
+    print('7. Isi dengan rata-rata (mean, kolom numerik)')
+    pilihan = input('Pilih opsi (1-7, 0 untuk batal): ')
     if pilihan == '1':
         df = df.dropna()
         print('Baris dengan data kosong telah dihapus.')
@@ -61,6 +66,41 @@ def hapus_missing(df):
             nilai = input(f'Masukkan nilai pengganti untuk data kosong di kolom {kolom}: ')
             df[kolom] = df[kolom].fillna(nilai)
             print(f'Data kosong di kolom {kolom} telah diisi dengan "{nilai}".')
+    elif pilihan == '3':
+        kolom = pilih_kolom(df)
+        if kolom:
+            df[kolom] = df[kolom].fillna(method='ffill')
+            print(f'Data kosong di kolom {kolom} telah diisi dengan forward fill.')
+    elif pilihan == '4':
+        kolom = pilih_kolom(df)
+        if kolom:
+            df[kolom] = df[kolom].fillna(method='bfill')
+            print(f'Data kosong di kolom {kolom} telah diisi dengan backward fill.')
+    elif pilihan == '5':
+        kolom = pilih_kolom(df)
+        if kolom and pd.api.types.is_numeric_dtype(df[kolom]):
+            median = df[kolom].median()
+            df[kolom] = df[kolom].fillna(median)
+            print(f'Data kosong di kolom {kolom} telah diisi dengan median ({median}).')
+        else:
+            print('Kolom tidak numerik.')
+    elif pilihan == '6':
+        kolom = pilih_kolom(df)
+        if kolom:
+            mode = df[kolom].mode()
+            if not mode.empty:
+                df[kolom] = df[kolom].fillna(mode[0])
+                print(f'Data kosong di kolom {kolom} telah diisi dengan modus ({mode[0]}).')
+            else:
+                print('Tidak ditemukan modus.')
+    elif pilihan == '7':
+        kolom = pilih_kolom(df)
+        if kolom and pd.api.types.is_numeric_dtype(df[kolom]):
+            mean = df[kolom].mean()
+            df[kolom] = df[kolom].fillna(mean)
+            print(f'Data kosong di kolom {kolom} telah diisi dengan rata-rata ({mean}).')
+        else:
+            print('Kolom tidak numerik.')
     return df
 
 def hapus_duplikat(df):

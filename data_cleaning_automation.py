@@ -104,8 +104,19 @@ def hapus_missing(df):
     return df
 
 def hapus_duplikat(df):
+    print('Kolom yang tersedia:')
+    for i, col in enumerate(df.columns):
+        print(f'{i+1}. {col}')
+    kolom_input = input('Masukkan nomor kolom pemisah dengan koma untuk acuan duplikat (misal: 1,2) atau tekan Enter untuk semua kolom: ')
+    if kolom_input.strip() == '':
+        kolom_acuan = None
+        print('Duplikat akan dicek berdasarkan seluruh kolom.')
+    else:
+        idxs = [int(x.strip())-1 for x in kolom_input.split(',') if x.strip().isdigit()]
+        kolom_acuan = [df.columns[i] for i in idxs if 0 <= i < len(df.columns)]
+        print(f'Duplikat akan dicek berdasarkan kolom: {kolom_acuan}')
     before = len(df)
-    df = df.drop_duplicates()
+    df = df.drop_duplicates(subset=kolom_acuan)
     after = len(df)
     print(f'{before-after} baris duplikat telah dihapus.')
     return df
@@ -118,7 +129,8 @@ def ubah_tipe_data(df):
         print('1. String')
         print('2. Integer')
         print('3. Float')
-        tipe = input('Pilihan (1/2/3): ')
+        print('4. Tanggal (datetime)')
+        tipe = input('Pilihan (1/2/3/4): ')
         try:
             if tipe == '1':
                 df[kolom] = df[kolom].astype(str)
@@ -126,6 +138,10 @@ def ubah_tipe_data(df):
                 df[kolom] = pd.to_numeric(df[kolom], errors='coerce').astype('Int64')
             elif tipe == '3':
                 df[kolom] = pd.to_numeric(df[kolom], errors='coerce').astype(float)
+            elif tipe == '4':
+                df[kolom] = pd.to_datetime(df[kolom], errors='coerce')
+                print(f'Contoh hasil konversi:')
+                print(df[kolom].head())
             print(f'Tipe data kolom {kolom} telah diubah.')
         except Exception as e:
             print('Gagal mengubah tipe data:', e)

@@ -8,21 +8,21 @@
   </head>
   <body>
     <div class="container">
+      <img src="https://cdn-icons-png.flaticon.com/512/2991/2991108.png" class="logo" alt="logo">
       <h1>Editing Dataset</h1>
       <div class="info">
-        <p>Rows: {{ info.rows }} | Columns: {{ info.cols }}</p>
-        <p>Duplicates: {{ info.duplicates }}</p>
+        <p><b>Rows:</b> {{ info.rows }} | <b>Columns:</b> {{ info.cols }} | <b>Duplicates:</b> {{ info.duplicates }}</p>
       </div>
       <div class="actions">
         <form method="post" action="/apply/{{ uid }}">
-          <label>Column:</label>
+          <label>Kolom:</label>
           <select name="column">
             <option value="">-- Semua kolom --</option>
             {% for c in columns %}
             <option value="{{ c }}">{{ c }}</option>
             {% endfor %}
           </select>
-          <label>Action:</label>
+          <label>Aksi:</label>
           <select name="action">
             <option value="dropna">Hapus baris kosong</option>
             <option value="fill_value">Isi dengan nilai</option>

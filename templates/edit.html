@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Data</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Editing Dataset</h1>
+      <div class="info">
+        <p>Rows: {{ info.rows }} | Columns: {{ info.cols }}</p>
+        <p>Duplicates: {{ info.duplicates }}</p>
+      </div>
+      <div class="actions">
+        <form method="post" action="/apply/{{ uid }}">
+          <label>Column:</label>
+          <select name="column">
+            <option value="">-- Semua kolom --</option>
+            {% for c in columns %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+          <label>Action:</label>
+          <select name="action">
+            <option value="dropna">Hapus baris kosong</option>
+            <option value="fill_value">Isi dengan nilai</option>
+            <option value="ffill">Forward fill</option>
+            <option value="bfill">Backward fill</option>
+            <option value="median">Isi dengan median</option>
+            <option value="mode">Isi dengan modus</option>
+            <option value="mean">Isi dengan rata-rata</option>
+            <option value="drop_duplicates">Hapus duplikat</option>
+            <option value="replace">Ganti nilai</option>
+            <option value="normalize_lower">Lowercase</option>
+            <option value="normalize_strip">Strip whitespace</option>
+            <option value="normalize_clean">Hapus karakter non-alfabet</option>
+            <option value="astype">Ubah tipe data</option>
+            <option value="outlier_iqr">Hapus outlier IQR</option>
+          </select>
+          <input type="text" name="value" placeholder="nilai untuk fill atau replace old/new">
+          <input type="text" name="old" placeholder="old value (replace)">
+          <input type="text" name="new" placeholder="new value (replace)">
+          <input type="text" name="dup_subset" placeholder="kolom duplikat (misal: col1,col2)">
+          <select name="to_type">
+            <option value="str">String</option>
+            <option value="int">Integer</option>
+            <option value="float">Float</option>
+            <option value="datetime">Datetime</option>
+          </select>
+          <button type="submit">Apply</button>
+        </form>
+        <a class="download" href="/download/{{ uid }}?fmt=csv">Download CSV</a>
+      </div>
+      <div class="preview">
+        {{ head_html | safe }}
+      </div>
+    </div>
+  </body>
+</html>

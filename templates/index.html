@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Cleaning App</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Data Cleaning Automation</h1>
+      <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload & Mulai</button>
+      </form>
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %}
+    </div>
+  </body>
+</html>

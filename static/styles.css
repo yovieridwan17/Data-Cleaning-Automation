@@ -1,0 +1,12 @@
+body { font-family: Inter, system-ui, Arial, sans-serif; background: #f4f7fb; color:#222 }
+.container { max-width:900px; margin:40px auto; padding:20px; background:#fff; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.08)}
+h1{ margin:0 0 12px 0; color:#0b5cff }
+form input[type=file]{ display:block; margin-bottom:12px }
+form button, .actions button{ background:#0b5cff; color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer }
+.actions { display:flex; gap:12px; align-items:center; margin-bottom:12px }
+.actions select, .actions input[type=text]{ padding:8px; border-radius:8px; border:1px solid #d6e0f0 }
+.preview table{ width:100%; border-collapse:collapse; margin-top:12px }
+.preview th{ background:#eef5ff; padding:8px; text-align:left }
+.preview td{ padding:8px; border-bottom:1px solid #f2f6fb }
+.download{ background:#12b76a; color:#fff; padding:8px 10px; border-radius:8px; text-decoration:none }
+.error{ color:#d92d20 }

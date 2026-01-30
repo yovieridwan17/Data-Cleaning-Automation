@@ -22,7 +22,7 @@
         } else if(action === 'add_column') {
           document.getElementById('valuefield').style.display='inline-block';
         } else if(action === 'calc_column') {
-          document.getElementById('valuefield').style.display='inline-block';
+          document.getElementById('calcfield').style.display='inline-block';
           document.getElementById('newfield').style.display='inline-block';
         }
       }
@@ -65,7 +65,31 @@
             <option value="astype">Ubah tipe data</option>
             <option value="outlier_iqr">Hapus outlier IQR</option>
           </select>
-          <input type="text" class="optfield" id="valuefield" name="value" placeholder="nilai untuk fill, nama kolom baru, atau formula" style="display:none;">
+          <input type="text" class="optfield" id="valuefield" name="value" placeholder="nilai untuk fill, nama kolom baru" style="display:none;">
+          <span class="optfield" id="calcfield" style="display:none;">
+            <label style="margin-left:8px;">Operasi:</label>
+            <select name="calc_op">
+              <option value="add">Penjumlahan (+)</option>
+              <option value="sub">Pengurangan (-)</option>
+              <option value="mul">Perkalian (*)</option>
+              <option value="div">Pembagian (/)</option>
+              <option value="single">Operasi single kolom</option>
+            </select>
+            <label>Kolom 1:</label>
+            <select name="calc_col1">
+              {% for c in columns %}
+              <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+            <label id="calc_col2_label">Kolom 2:</label>
+            <select name="calc_col2">
+              <option value="">--</option>
+              {% for c in columns %}
+              <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+            <input type="text" name="calc_single_exp" placeholder="exp: x*0.1 (untuk single kolom)" style="width:120px;">
+          </span>
           <input type="text" class="optfield" id="oldfield" name="old" placeholder="old value (replace)" style="display:none;">
           <input type="text" class="optfield" id="newfield" name="new" placeholder="new value (replace/kolom baru)" style="display:none;">
           <input type="text" class="optfield" id="dupfield" name="dup_subset" placeholder="kolom duplikat (misal: col1,col2)" style="display:none;">
@@ -83,5 +107,14 @@
         {{ head_html | safe }}
       </div>
     </div>
+    <script>
+      // Hide/show Kolom 2 dan ekspresi single kolom sesuai operasi
+      document.querySelector('select[name="calc_op"]').onchange = function() {
+        var op = this.value;
+        document.querySelector('select[name="calc_col2"]').style.display = (op==='single') ? 'none' : 'inline-block';
+        document.getElementById('calc_col2_label').style.display = (op==='single') ? 'none' : 'inline-block';
+        document.querySelector('input[name="calc_single_exp"]').style.display = (op==='single') ? 'inline-block' : 'none';
+      };
+    </script>
   </body>
 </html>

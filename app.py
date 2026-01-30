@@ -99,22 +99,27 @@ def apply(uid):
         if new_col and new_col not in df.columns:
             df[new_col] = ''
     elif action == 'calc_column':
-        formula = request.form.get('value')
-        # formula example: col1+col2 or col1-col2 or col1*col2 or col1/col2
-        if formula:
-            import re
-            m = re.match(r'\s*([\w]+)\s*([+\-*/])\s*([\w]+)\s*$', formula)
-            new_col = request.form.get('new') or 'hasil'
-            if m and m.group(1) in df.columns and m.group(3) in df.columns:
-                col1, op, col2 = m.group(1), m.group(2), m.group(3)
-                if op == '+':
-                    df[new_col] = df[col1] + df[col2]
-                elif op == '-':
-                    df[new_col] = df[col1] - df[col2]
-                elif op == '*':
-                    df[new_col] = df[col1] * df[col2]
-                elif op == '/':
-                    df[new_col] = df[col1] / df[col2]
+        op = request.form.get('calc_op')
+        col1 = request.form.get('calc_col1')
+        col2 = request.form.get('calc_col2')
+        new_col = request.form.get('new') or 'hasil'
+        if op in ['add','sub','mul','div'] and col1 and col2 and col1 in df.columns and col2 in df.columns:
+            if op == 'add':
+                df[new_col] = df[col1] + df[col2]
+            elif op == 'sub':
+                df[new_col] = df[col1] - df[col2]
+            elif op == 'mul':
+                df[new_col] = df[col1] * df[col2]
+            elif op == 'div':
+                df[new_col] = df[col1] / df[col2]
+        elif op == 'single' and col1 and col1 in df.columns:
+            exp = request.form.get('calc_single_exp')
+            # exp: x*0.1, x+10, x/100, x-5, dst. x = nilai kolom1
+            if exp:
+                try:
+                    df[new_col] = df[col1].apply(lambda x: eval(exp, {}, {'x': x}))
+                except Exception:
+                    pass
     elif action == 'replace':
         old = request.form.get('old')
         new = request.form.get('new')

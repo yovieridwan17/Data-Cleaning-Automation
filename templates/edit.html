@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit Data</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <script>
+      function onActionChange() {
+        var action = document.querySelector('select[name="action"]').value;
+        // Hide all optional fields first
+        document.querySelectorAll('.optfield').forEach(e => e.style.display='none');
+        if(action === 'fill_value') {
+          document.getElementById('valuefield').style.display='inline-block';
+        } else if(action === 'replace') {
+          document.getElementById('oldfield').style.display='inline-block';
+          document.getElementById('newfield').style.display='inline-block';
+        } else if(action === 'drop_duplicates') {
+          document.getElementById('dupfield').style.display='inline-block';
+        } else if(action === 'astype') {
+          document.getElementById('astypefield').style.display='inline-block';
+        } else if(action === 'add_column') {
+          document.getElementById('valuefield').style.display='inline-block';
+        } else if(action === 'calc_column') {
+          document.getElementById('valuefield').style.display='inline-block';
+          document.getElementById('newfield').style.display='inline-block';
+        }
+      }
+      window.onload = onActionChange;
+    </script>
   </head>
   <body>
     <div class="container">
@@ -23,7 +46,7 @@
             {% endfor %}
           </select>
           <label>Aksi:</label>
-          <select name="action">
+          <select name="action" onchange="onActionChange()">
             <option value="dropna">Hapus baris kosong</option>
             <option value="fill_value">Isi dengan nilai</option>
             <option value="ffill">Forward fill</option>
@@ -42,11 +65,11 @@
             <option value="astype">Ubah tipe data</option>
             <option value="outlier_iqr">Hapus outlier IQR</option>
           </select>
-          <input type="text" name="value" placeholder="nilai untuk fill, nama kolom baru, atau formula">
-          <input type="text" name="old" placeholder="old value (replace)">
-          <input type="text" name="new" placeholder="new value (replace)">
-          <input type="text" name="dup_subset" placeholder="kolom duplikat (misal: col1,col2)">
-          <select name="to_type">
+          <input type="text" class="optfield" id="valuefield" name="value" placeholder="nilai untuk fill, nama kolom baru, atau formula" style="display:none;">
+          <input type="text" class="optfield" id="oldfield" name="old" placeholder="old value (replace)" style="display:none;">
+          <input type="text" class="optfield" id="newfield" name="new" placeholder="new value (replace/kolom baru)" style="display:none;">
+          <input type="text" class="optfield" id="dupfield" name="dup_subset" placeholder="kolom duplikat (misal: col1,col2)" style="display:none;">
+          <select class="optfield" id="astypefield" name="to_type" style="display:none;">
             <option value="str">String</option>
             <option value="int">Integer</option>
             <option value="float">Float</option>

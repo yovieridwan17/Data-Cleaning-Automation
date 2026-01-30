@@ -27,6 +27,21 @@
         }
       }
       window.onload = onActionChange;
+      function onCalcOpChange() {
+        var op = document.querySelector('select[name="calc_op"]').value;
+        var col2 = document.querySelector('select[name="calc_col2"]');
+        var col2label = document.getElementById('calc_col2_label');
+        var singleOps = document.getElementById('single_ops');
+        if(op==='single') {
+          col2.style.display = 'none';
+          col2label.style.display = 'none';
+          singleOps.style.display = 'inline-block';
+        } else {
+          col2.style.display = 'inline-block';
+          col2label.style.display = 'inline-block';
+          singleOps.style.display = 'none';
+        }
+      }
     </script>
   </head>
   <body>
@@ -68,12 +83,12 @@
           <input type="text" class="optfield" id="valuefield" name="value" placeholder="nilai untuk fill, nama kolom baru" style="display:none;">
           <span class="optfield" id="calcfield" style="display:none;">
             <label style="margin-left:8px;">Operasi:</label>
-            <select name="calc_op">
+            <select name="calc_op" onchange="onCalcOpChange()">
               <option value="add">Penjumlahan (+)</option>
               <option value="sub">Pengurangan (-)</option>
               <option value="mul">Perkalian (*)</option>
               <option value="div">Pembagian (/)</option>
-              <option value="single">Operasi single kolom</option>
+              <option value="single">Single kolom</option>
             </select>
             <label>Kolom 1:</label>
             <select name="calc_col1">
@@ -88,7 +103,18 @@
               <option value="{{ c }}">{{ c }}</option>
               {% endfor %}
             </select>
-            <input type="text" name="calc_single_exp" placeholder="exp: x*0.1 (untuk single kolom)" style="width:120px;">
+            <span id="single_ops" style="display:none;">
+              <label>Operasi:</label>
+              <select name="calc_single_op">
+                <option value="percent">Persentase (%)</option>
+                <option value="neg">Negatif (-x)</option>
+                <option value="square">Pangkat 2 (x²)</option>
+                <option value="sqrt">Akar (√x)</option>
+                <option value="log">Logaritma (log(x))</option>
+                <option value="custom">Custom (isi ekspresi di bawah)</option>
+              </select>
+              <input type="text" name="calc_single_exp" placeholder="exp: x*0.1 (untuk custom)" style="width:120px;">
+            </span>
           </span>
           <input type="text" class="optfield" id="oldfield" name="old" placeholder="old value (replace)" style="display:none;">
           <input type="text" class="optfield" id="newfield" name="new" placeholder="new value (replace/kolom baru)" style="display:none;">
@@ -112,12 +138,8 @@
     </div>
     <script>
       // Hide/show Kolom 2 dan ekspresi single kolom sesuai operasi
-      document.querySelector('select[name="calc_op"]').onchange = function() {
-        var op = this.value;
-        document.querySelector('select[name="calc_col2"]').style.display = (op==='single') ? 'none' : 'inline-block';
-        document.getElementById('calc_col2_label').style.display = (op==='single') ? 'none' : 'inline-block';
-        document.querySelector('input[name="calc_single_exp"]').style.display = (op==='single') ? 'inline-block' : 'none';
-      };
+      onCalcOpChange();
+      document.querySelector('select[name="calc_op"]').onchange = onCalcOpChange;
     </script>
   </body>
 </html>

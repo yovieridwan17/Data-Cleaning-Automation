@@ -113,13 +113,25 @@ def apply(uid):
             elif op == 'div':
                 df[new_col] = df[col1] / df[col2]
         elif op == 'single' and col1 and col1 in df.columns:
-            exp = request.form.get('calc_single_exp')
-            # exp: x*0.1, x+10, x/100, x-5, dst. x = nilai kolom1
-            if exp:
-                try:
-                    df[new_col] = df[col1].apply(lambda x: eval(exp, {}, {'x': x}))
-                except Exception:
-                    pass
+            single_op = request.form.get('calc_single_op')
+            if single_op == 'percent':
+                df[new_col] = df[col1] / 100
+            elif single_op == 'neg':
+                df[new_col] = -df[col1]
+            elif single_op == 'square':
+                df[new_col] = df[col1] ** 2
+            elif single_op == 'sqrt':
+                df[new_col] = df[col1] ** 0.5
+            elif single_op == 'log':
+                import numpy as np
+                df[new_col] = df[col1].apply(lambda x: np.log(x) if x > 0 else None)
+            elif single_op == 'custom':
+                exp = request.form.get('calc_single_exp')
+                if exp:
+                    try:
+                        df[new_col] = df[col1].apply(lambda x: eval(exp, {}, {'x': x}))
+                    except Exception:
+                        pass
     elif action == 'replace':
         old = request.form.get('old')
         new = request.form.get('new')

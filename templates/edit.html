@@ -32,6 +32,9 @@
             <option value="mode">Isi dengan modus</option>
             <option value="mean">Isi dengan rata-rata</option>
             <option value="drop_duplicates">Hapus duplikat</option>
+            <option value="drop_column">Drop kolom</option>
+            <option value="add_column">Tambah kolom baru</option>
+            <option value="calc_column">Perhitungan kolom baru</option>
             <option value="replace">Ganti nilai</option>
             <option value="normalize_lower">Lowercase</option>
             <option value="normalize_strip">Strip whitespace</option>
@@ -39,7 +42,7 @@
             <option value="astype">Ubah tipe data</option>
             <option value="outlier_iqr">Hapus outlier IQR</option>
           </select>
-          <input type="text" name="value" placeholder="nilai untuk fill atau replace old/new">
+          <input type="text" name="value" placeholder="nilai untuk fill, nama kolom baru, atau formula">
           <input type="text" name="old" placeholder="old value (replace)">
           <input type="text" name="new" placeholder="new value (replace)">
           <input type="text" name="dup_subset" placeholder="kolom duplikat (misal: col1,col2)">

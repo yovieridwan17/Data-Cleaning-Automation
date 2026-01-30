@@ -91,6 +91,30 @@ def apply(uid):
             df = df.drop_duplicates(subset=cols if cols else None)
         else:
             df = df.drop_duplicates()
+    elif action == 'drop_column':
+        if col and col in df.columns:
+            df = df.drop(columns=[col])
+    elif action == 'add_column':
+        new_col = request.form.get('value')
+        if new_col and new_col not in df.columns:
+            df[new_col] = ''
+    elif action == 'calc_column':
+        formula = request.form.get('value')
+        # formula example: col1+col2 or col1-col2 or col1*col2 or col1/col2
+        if formula:
+            import re
+            m = re.match(r'\s*([\w]+)\s*([+\-*/])\s*([\w]+)\s*$', formula)
+            new_col = request.form.get('new') or 'hasil'
+            if m and m.group(1) in df.columns and m.group(3) in df.columns:
+                col1, op, col2 = m.group(1), m.group(2), m.group(3)
+                if op == '+':
+                    df[new_col] = df[col1] + df[col2]
+                elif op == '-':
+                    df[new_col] = df[col1] - df[col2]
+                elif op == '*':
+                    df[new_col] = df[col1] * df[col2]
+                elif op == '/':
+                    df[new_col] = df[col1] / df[col2]
     elif action == 'replace':
         old = request.form.get('old')
         new = request.form.get('new')
